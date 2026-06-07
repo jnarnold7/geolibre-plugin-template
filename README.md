@@ -81,7 +81,7 @@ import "geolibre-plugin-template/style.css";
 
 const map = new maplibregl.Map({
   container: "map",
-  style: "https://demotiles.maplibre.org/style.json",
+  style: "https://tiles.openfreemap.org/styles/positron",
   center: [0, 0],
   zoom: 2,
 });
@@ -118,7 +118,7 @@ function App() {
 
     const mapInstance = new maplibregl.Map({
       container: mapContainer.current,
-      style: "https://demotiles.maplibre.org/style.json",
+      style: "https://tiles.openfreemap.org/styles/positron",
       center: [0, 0],
       zoom: 2,
     });
