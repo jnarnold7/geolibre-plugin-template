@@ -20,7 +20,7 @@ function createControl(app: AppAPI): PluginControl {
   const nextControl = new PluginControl({
     collapsed: pendingState?.collapsed ?? true,
     panelWidth: pendingState?.panelWidth ?? 300,
-    title: "GeoLibre Plugin Template",
+    title: "OpenAVM Mass Appraisal",
     // Bind optional host capabilities; each falls back to a no-op on hosts (or
     // standalone usage) that do not provide them.
     pickFiles: () => app.pickLocalDirectoryFiles?.() ?? Promise.resolve(null),
@@ -60,8 +60,8 @@ function isPluginState(value: unknown): value is Partial<PluginState> {
 }
 
 export const plugin: GeoLibrePlugin<PluginControl> = {
-  id: "geolibre-plugin-template",
-  name: "GeoLibre Plugin Template",
+  id: "geolibre-plugin-openavm",
+  name: "GeoLibre OpenAVM Appraisal Plugin",
   version: "0.1.0",
   urlParameterNames: [PLUGIN_DATA_PARAM],
   activate(app) {

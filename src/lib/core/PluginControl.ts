@@ -1,3 +1,5 @@
+import React from 'react';
+import { createRoot, Root } from 'react-dom/client';
 import type { IControl, Map as MapLibreMap } from 'maplibre-gl';
 import type {
   PluginControlOptions,
@@ -7,6 +9,7 @@ import type {
 } from './types';
 import type { DeepLinkConsumer } from '../utils/deep-link';
 import type { GeoLibreNativeLayerRegistration } from '../geolibre/host-api';
+import { OpenAVMUI } from './OpenAVMUI';
 
 /**
  * Default options for the PluginControl.
@@ -53,6 +56,7 @@ export class PluginControl implements IControl, DeepLinkConsumer {
   private _options: Required<PluginControlOptions>;
   private _state: PluginState;
   private _eventHandlers: EventHandlersMap = new globalThis.Map();
+  private _reactRoot?: Root;
 
   // Ids of native layers this control has registered with the host, so they can
   // be unregistered when the control is removed.
@@ -113,6 +117,15 @@ export class PluginControl implements IControl, DeepLinkConsumer {
    * Implements the IControl interface.
    */
   onRemove(): void {
+    if (this._reactRoot) {
+      try {
+        this._reactRoot.unmount();
+      } catch (e) {
+        console.error('Error unmounting React root:', e);
+      }
+      this._reactRoot = undefined;
+    }
+
     // Remove event listeners
     if (this._resizeHandler) {
       window.removeEventListener('resize', this._resizeHandler);
@@ -418,34 +431,11 @@ export class PluginControl implements IControl, DeepLinkConsumer {
     const content = document.createElement('div');
     content.className = 'plugin-control-content';
 
-    const placeholder = document.createElement('p');
-    placeholder.className = 'plugin-control-placeholder';
-    placeholder.textContent = 'Add your custom plugin content here.';
-
-    // Demonstrate the GeoLibre host callbacks end to end. These buttons drive
-    // `openFiles()` and `loadFromUrl()`, which call the host-provided pickers
-    // and native-layer registration. Outside GeoLibre they fall back to no-ops.
-    const actions = document.createElement('div');
-    actions.className = 'plugin-control-actions';
-
-    const openFolderBtn = document.createElement('button');
-    openFolderBtn.type = 'button';
-    openFolderBtn.className = 'plugin-control-action';
-    openFolderBtn.textContent = 'Open folder…';
-    openFolderBtn.addEventListener('click', () => {
-      void this.openFiles();
-    });
-
-    actions.appendChild(openFolderBtn);
-
-    const status = document.createElement('div');
-    status.className = 'plugin-control-status';
-    status.textContent = '';
-    this._status = status;
-
-    content.appendChild(placeholder);
-    content.appendChild(actions);
-    content.appendChild(status);
+    // Mount the React-based OpenAVM appraisal interface inside the content panel
+    this._reactRoot = createRoot(content);
+    this._reactRoot.render(
+      React.createElement(OpenAVMUI, { map: this._map, control: this })
+    );
 
     panel.appendChild(header);
     panel.appendChild(content);

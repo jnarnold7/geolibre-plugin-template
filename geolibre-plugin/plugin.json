@@ -1,8 +1,8 @@
 {
-  "id": "geolibre-plugin-template",
-  "name": "GeoLibre Plugin Template",
+  "id": "geolibre-plugin-openavm",
+  "name": "GeoLibre OpenAVM Appraisal Plugin",
   "version": "0.1.0",
   "entry": "dist/index.js",
-  "description": "A starter GeoLibre plugin bundle with a MapLibre control.",
+  "description": "Integrates openavmkit to run real estate mass appraisal, ratio studies, and equity evaluations directly on MapLibre maps.",
   "style": "dist/style.css"
 }
